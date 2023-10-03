@@ -27,18 +27,7 @@ bool checkCommandWindows(const char* command) {
 
 // Function to check if a command exists on Unix-like systems
 //bool checkCommandUnix(const char* command) {
-//    pid_t childPid = fork();
-//
-//    if (childPid == 0) { // Child process
-//        execl("/bin/sh", "/bin/sh", "-c", command, NULL);
-//        _exit(EXIT_FAILURE);
-//    } else if (childPid < 0) {
-//        return false; // Fork failed
-//    } else { // Parent process
-//        int status;
-//        waitpid(childPid, &status, 0);
-//        return WEXITSTATUS(status) == 0; // Check if the exit status is 0
-//    }
+//    return (access(command, X_OK) == 0);
 //}
 
 int main() {
@@ -119,7 +108,6 @@ int main() {
                         }
                     }
                     if(count > 0){
-                        std::cout << "here" << std::endl;
                         std::string print;
                         std::stringstream X(value);
 
@@ -134,7 +122,8 @@ int main() {
                                 std::string part1 = print.substr(0, pos); // Extract the first part
                                 std::string part2 = print.substr(pos + 1); // Extract the second part
 
-                                std::cout << "\n   command: " << part1 << "\n   input: " << part2 << std::endl;
+                                std::cout << "\n   command: " << part1 << "\n   input: " << part2 <<"\n   output: " << std::endl;
+
                                 std::string combine = part1;
                                 combine += " ";
                                 combine += part2;
@@ -163,7 +152,7 @@ int main() {
                         std::string part2 = value.substr(pos + 1) + " " + commandTwoInput; // "command2"
                         const char* charPointer1 = part1.c_str();
                         const char* charPointer2 = part2.c_str();
-                        std::cout << "\n   command: " << value.substr(0, pos) << "\n   input: " << commandOneInput << std::endl;
+                        std::cout << "\n   command: " << value.substr(0, pos) << "\n   input: " << commandOneInput <<"\n   output: " << std::endl;
                         if (strncmp(charPointer1, "cd ", 3) == 0) {
                             const char* directory = charPointer1 + 3;
                             if (std::filesystem::exists(directory) && std::filesystem::is_directory(directory)) {
@@ -176,7 +165,7 @@ int main() {
                         } else{
                             std::system(charPointer1);
                         }
-                        std::cout << "   command: " << value.substr(pos + 1) << "\n   input: " << commandTwoInput << std::endl;
+                        std::cout << "\n   command: " << value.substr(0, pos) << "\n   input: " << commandOneInput <<"\n   output: " << std::endl;
                         if (strncmp(charPointer2, "cd ", 3) == 0) {
                             const char* directory = charPointer2 + 3;
                             if (std::filesystem::exists(directory) && std::filesystem::is_directory(directory)) {
@@ -227,7 +216,7 @@ int main() {
                 std::cout << "You didn't choose an option." << std::endl;
                 continue;
             } else if(option==1){
-                std::cout << "Please write your command, the format is: \ncommand1 input1\ncommand2 input2\n..." << std::endl;
+                std::cout << "Please write your command, the format is: \ncommand1 input1\ncommand2 input2\n...\nTo stop press enter." << std::endl;
                 std::string line;
                 std::string script;
                 int check=1;
@@ -270,7 +259,7 @@ int main() {
                         const char* command1 = line.c_str();
                         int exitCode1 = CheckCommand(command1);
                         if (exitCode1 == 0) {
-                            std::cout << "Your command and input are valid." << std::endl;
+                            std::cout << "Your command and input are valid.\nPlease enter your next command (press enter to stop).\n" << std::endl;
                         } else {
                             std::cout << "Your command and input are not valid." << std::endl;
                             check=0;
